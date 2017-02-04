@@ -26,7 +26,7 @@ const componentTypeToSuffix = {
     filter: 'filter',
 };
 
-const ignoredComponentSet = new Set(['module', 'run', 'provider', 'config']);
+const validComponentSet = new Set(['directive', 'component', 'factory', 'service', 'filter', 'value', 'constant', 'controller']); 
 
 function create(context) {
     const filename = path.basename(context.getFilename());
@@ -52,15 +52,12 @@ function create(context) {
     }
 
     function gatherAngularComponentInfos(node) {
-        if (!angularUtils.isAngularComponent(node) || !angularUtils.isMemberExpression(node.callee)) {
+        if (!angularUtils.isAngularComponent(node) || !angularUtils.isMemberExpression(node.callee) || !validComponentSet.has(node.callee.property.name)) {
             return;
         }
-        
+
         const componentName = node.arguments[0].value;
         const componentType = componentTypeToSuffix[node.callee.property.name];
-        if (ignoredComponentSet.has(node.callee.property.name)) {
-            return;
-        }
 
         componentInfos.push({
             expectedName: componentName + (componentType ? `.${componentType}` : '') + fileEnding,
