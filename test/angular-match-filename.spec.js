@@ -4,7 +4,7 @@
 // Requirements
 // ------------------------------------------------------------------------------
 
-var rule = require('../rules/angular-match-filenames');
+var rule = require('../rules/angular-match-filename');
 var RuleTester = require('eslint').RuleTester;
 
 // ------------------------------------------------------------------------------
@@ -23,7 +23,7 @@ const commonFalsePositives = [
 
 
 const eslintTester = new RuleTester();
-eslintTester.run('angular-match-filenames', rule, {
+eslintTester.run('angular-match-filename', rule, {
     valid: [
     {
         filename: 'anything.js',
