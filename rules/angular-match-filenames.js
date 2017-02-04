@@ -4,55 +4,66 @@ const path = require('path');
 
 const angularUtils = require('../utils/angular-utils');
 
-module.exports = (function() {
-    const fileEnding = '.js';
-    const componentTypeToSuffix = {
-        directive: 'component',
-        component: 'component',
-        filter: 'filter',
+
+'use strict';
+
+module.exports = {
+    meta: {
+        docs: {
+            description: 'enforce naming files after contained angular components',
+            category: 'Stylistic Issues',
+            recommended: false,
+        },
+        schema: []
+    },
+    create,
+};
+
+const fileEnding = '.js';
+const componentTypeToSuffix = {
+    directive: 'component',
+    component: 'component',
+    filter: 'filter',
+};
+
+function create(context) {
+    const filename = path.basename(context.getFilename());
+
+    let componentInfos = [];
+    return {
+        CallExpression: gatherAngularComponentInfos,
+        'Program:exit': validateFilename,
     };
 
-    return function(context) {
-        const filename = path.basename(context.getFilename());
+    function validateFilename(node) {
 
-        let componentInfos = [];
-        return {
-            CallExpression: gatherAngularComponentInfos,
-            'Program:exit': validateFilename,
-        };
-
-        function validateFilename(node) {
-
-            if (componentInfos.length && componentInfos.every(doesNotMatchFilename)) { 
-                const expectedNames = componentInfos.reverse().map(component => `"${component.expectedName}"`);
-                context.report(node, `Filename must be${expectedNames.length > 1 ? ' one of ' : ' ' }${expectedNames.join(', ')}`);
-            }
-
-            componentInfos = [];
+        if (componentInfos.length && componentInfos.every(doesNotMatchFilename)) { 
+            const expectedNames = componentInfos.reverse().map(component => `"${component.expectedName}"`);
+            context.report(node, `Filename must be${expectedNames.length > 1 ? ' one of ' : ' ' }${expectedNames.join(', ')}`);
         }
 
-        function doesNotMatchFilename(componentInfo) {
-            return componentInfo.expectedName !== filename;
+        componentInfos = [];
+    }
+
+    function doesNotMatchFilename(componentInfo) {
+        return componentInfo.expectedName !== filename;
+    }
+
+    function gatherAngularComponentInfos(node) {
+        if (!angularUtils.isAngularComponent(node) || !angularUtils.isMemberExpression(node.callee)) {
+            return;
         }
-
-        function gatherAngularComponentInfos(node) {
-            if (!angularUtils.isAngularComponent(node) || !angularUtils.isMemberExpression(node.callee)) {
-                return;
-            }
-            
-            const componentName = node.arguments[0].value;
-            const componentType = componentTypeToSuffix[node.callee.property.name];
-            if (!componentType) {
-                return;
-            }
-            componentInfos.push({
-                expectedName: componentName + '.' + componentType + fileEnding,
-                name: componentName,
-                type: componentType,
-                node,
-            });
+        
+        const componentName = node.arguments[0].value;
+        const componentType = componentTypeToSuffix[node.callee.property.name];
+        if (!componentType) {
+            return;
         }
-    };
-
-
-}());
+        componentInfos.push({
+            expectedName: componentName + '.' + componentType + fileEnding,
+            name: componentName,
+            type: componentType,
+            node,
+        });
+    }
+};
