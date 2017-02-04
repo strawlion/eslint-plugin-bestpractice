@@ -2,6 +2,7 @@
 
 module.exports = {
     rules: {
+        'angular-match-filename': require('./rules/angular-match-filename'),
         'function-declaration-at-bottom': require('./rules/function-declaration-at-bottom'),
         'limit-call-depth': require('./rules/limit-call-depth'),
         'limit-destructured-arg-depth': require('./rules/limit-destructured-arg-depth'),
