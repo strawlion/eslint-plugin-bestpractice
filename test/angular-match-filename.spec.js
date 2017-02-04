@@ -105,6 +105,16 @@ eslintTester.run('angular-match-filename', rule, {
         filename: 'src/app/notSomething.directive.js',
         code: 'app.directive("something", function() {});',
         errors: [{message: 'Filename must be "something.component.js"'}]
+    },
+    {
+        filename: 'src/app/not-something.js',
+        code: 'app.controller("something", function() {});',
+        errors: [{message: 'Filename must be "something.js"'}]
+    }, 
+    {
+        filename: 'src/app/not-something.js',
+        code: 'app.service("something", function() {});',
+        errors: [{message: 'Filename must be "something.js"'}]
     }, 
     {
         filename: 'src/app/notSomething.directive.js',
