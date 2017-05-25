@@ -49,7 +49,7 @@ function create(context) {
         const directoryPortion = filePathInfo.dir.split('/').join('.');
         const expectedModuleName = `${directoryPortion}${directoryPortion.length ? '.' : '' }${filePathInfo.base.split('.')[0]}`;
         if (moduleName !== expectedModuleName) {
-            context.report(node, `Module name must be "${expectedModuleName}"`);
+            context.report(node, `Module name must be "${expectedModuleName}" to match folder hierarchy`);
         }
 
     }
