@@ -33,21 +33,9 @@ module.exports = {
 function create(context) {
     const options = context.options[0] || { basePath: '' };
 
-    let moduleInfo = null;
-
     return {
         CallExpression: gatherAngularModuleInfos,
-        'Program:exit': validateModuleName,
     };
-
-    function validateModuleName(node) {
-
-        if (moduleInfo && moduleInfo.expectedName !== moduleInfo.name) {
-            context.report(node, `Module name must be "${moduleInfo.expectedName}"`);
-        }
-
-        moduleInfo = null;
-    }
 
     function gatherAngularModuleInfos(node) {
         if (!angularUtils.isAngularModuleDeclaration(node) || !context.getFilename().includes(options.basePath)) {
@@ -57,12 +45,12 @@ function create(context) {
         const moduleName = node.arguments[0].value;
 
         const filePath = path.relative(options.basePath, context.getFilename());
-        var filePathInfo = path.parse(filePath)
-        var directoryPortion = filePathInfo.dir.split('/').join('.');
-        moduleInfo = {
-            expectedName: `${directoryPortion}${directoryPortion.length ? '.' : '' }${filePathInfo.base.split('.')[0]}`,
-            name: moduleName,
-            node,
-        };
+        const filePathInfo = path.parse(filePath)
+        const directoryPortion = filePathInfo.dir.split('/').join('.');
+        const expectedModuleName = `${directoryPortion}${directoryPortion.length ? '.' : '' }${filePathInfo.base.split('.')[0]}`;
+        if (moduleName !== expectedModuleName) {
+            context.report(node, `Module name must be "${expectedModuleName}"`);
+        }
+
     }
 };
