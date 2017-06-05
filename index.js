@@ -2,6 +2,7 @@
 
 module.exports = {
     rules: {
+        'angular-enforce-oneway': require('./rules/angular-enforce-oneway'),
         'angular-match-filename': require('./rules/angular-match-filename'),
         'angular-module-name': require('./rules/angular-module-name'),
         'function-declaration-at-bottom': require('./rules/function-declaration-at-bottom'),
