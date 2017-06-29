@@ -38,13 +38,13 @@ function create(context) {
     };
 
     function gatherAngularModuleInfos(node) {
-        if (!angularUtils.isAngularModuleDeclaration(node) || !context.getFilename().includes(options.basePath)) {
+        if (!angularUtils.isAngularModuleDeclaration(node) || !path.resolve(context.getFilename()).includes(options.basePath)) {
             return;
         }
 
         const moduleName = node.arguments[0].value;
 
-        const filePath = path.relative(options.basePath, context.getFilename());
+        const filePath = path.relative(options.basePath, path.resolve(context.getFilename()));
         const filePathInfo = path.parse(filePath)
         const fileName = filePathInfo.base.split('.')[0];
         const directorySegments = filePathInfo.dir.split('/');
