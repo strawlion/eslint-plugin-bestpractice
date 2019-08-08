@@ -16,6 +16,7 @@ ruleTester.run('limit-destructured-arg-depth', rule, {
 
         { code: 'function fn() {}' },
         { code: 'function fn([]) {}' },
+        { code: 'function fn([,]) {}' },
         { code: 'function fn([]) {}', options: [{ max: 1 }] },
         { code: 'function fn([[hi]]) {}', options: [{ max: 2 }] },
     ],
