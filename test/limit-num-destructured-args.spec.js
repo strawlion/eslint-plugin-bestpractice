@@ -14,6 +14,7 @@ ruleTester.run('limit-num-destructured-args', rule, {
 
         { code: 'function fn() {}' },
         { code: 'function fn([]) {}' },
+        { code: 'function fn([,]) {}' },
         { code: 'function fn([]) {}', options: [{ max: 1 }] },
         { code: 'function fn([], []) {}', options: [{ max: 2 }] },
     ],

@@ -14,6 +14,7 @@ ruleTester.run('limit-num-destructured-arg-properties', rule, {
         { code: 'function fn({ prop1, prop2, prop3, prop4 }) {}', options: [{ max: 4 }] },
 
         { code: 'function fn([]) {}' },
+        { code: 'function fn([,]) {}' },
         { code: 'function fn([[]]) {}' },
         { code: 'function fn([[], [], []]) {}' },
         { code: 'function fn([[], [], []]) {}', options: [{ max: 3 }] },

@@ -12,8 +12,8 @@ function isFunctionType(node) {
 }
 
 function isObjectOrArrayPattern(node) {
-    return  node.type === 'ObjectPattern' ||
-            node.type === 'ArrayPattern';
+    return node && (node.type === 'ObjectPattern' ||
+        node.type === 'ArrayPattern');
 }
 
 function getNodeDepth(node) {
